@@ -27,27 +27,6 @@ areClose z1 z2 = magnitude (z1 - z2) < epsilon * h
 square :: Cplx -> Cplx
 square z = z * z
 
--- | Derivative of the first Jacobi theta function
-jtheta1Dash :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
-jtheta1Dash z q = 
-  go 0 (0.0 :+ 0.0) 1.0 (1.0 / qsq) 1.0
-  where 
-    qsq = q * q
-    go :: Int -> Cplx -> Cplx -> Cplx -> Cplx -> Cplx
-    go n out alt q_2n q_n_np1 
-      | n > 3000 = error "Reached 3000 iterations."
-      | areClose out outnew = 2.0 * sqrt (sqrt q) * out
-      | otherwise = go (n + 1) outnew (-alt) q_2np1 q_np1_np2
-        where
-          q_2np1 = q_2n * qsq
-          q_np1_np2 = q_n_np1 * q_2np1
-          n' = fromIntegral n 
-          k = 2.0 * n' + 1.0
-          outnew = out + k * alt * q_np1_np2 * cos (k * z) 
-
 jtheta1Alt1 :: Cplx -> Cplx -> Cplx
 jtheta1Alt1 z q =
   go 0 (0.0 :+ 0.0) 1.0 (1.0 / qsq) 1.0
@@ -145,3 +124,24 @@ jtheta4 ::
   -> Cplx
 jtheta4 z = jtheta3 (z + pi/2)
 
+-- | Derivative of the first Jacobi theta function
+jtheta1Dash :: 
+     Cplx -- ^ z
+  -> Cplx -- ^ q, the nome
+  -> Cplx
+jtheta1Dash z q = 
+  go 0 (0.0 :+ 0.0) 1.0 (1.0 / qsq) 1.0
+  where 
+    q' = checkQ q
+    qsq = q' * q'
+    go :: Int -> Cplx -> Cplx -> Cplx -> Cplx -> Cplx
+    go n out alt q_2n q_n_np1 
+      | n > 3000 = error "Reached 3000 iterations."
+      | areClose out outnew = 2.0 * sqrt (sqrt q) * out
+      | otherwise = go (n + 1) outnew (-alt) q_2np1 q_np1_np2
+        where
+          q_2np1 = q_2n * qsq
+          q_np1_np2 = q_n_np1 * q_2np1
+          n' = fromIntegral n 
+          k = 2.0 * n' + 1.0
+          outnew = out + k * alt * q_np1_np2 * cos (k * z) 
