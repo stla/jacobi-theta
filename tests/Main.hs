@@ -14,6 +14,11 @@ q = exp (-pi)
 q' :: Complex Double 
 q' = exp (-pi/100)
 
+q'' :: Complex Double 
+q'' = exp (i_ * pi * tau)
+  where
+    tau = 2.0 :+ 2.0
+
 main :: IO ()
 main = defaultMain $
   testGroup "Tests"
@@ -27,6 +32,13 @@ main = defaultMain $
     testCase "another jtheta1 value" $ do
       let expected = 0.0284051242069853 :+ 0.0
           obtained = jtheta1 2 q'
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected),
+
+    testCase "yet another jtheta1 value" $ do
+      let expected = 0.539843563932874 :+ 0.26400643871132
+          obtained = jtheta1 (1 :+ 1) q''
       assertEqual ""
         (approx 10 obtained)
         (approx 10 expected),
