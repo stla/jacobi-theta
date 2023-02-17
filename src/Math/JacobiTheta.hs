@@ -64,18 +64,20 @@ jtheta1Alt2 z' t' =
           termp = altp * exp (- square (nplus' - 0.5 + z') / t')
           newseries = series + termm + termp
 
-falpha :: Cplx -> Cplx -> Cplx
-falpha z tau = 
-  sqrt (-i_ * tau) * exp (i_ / tau * z * z / pi)
+-- falpha :: Cplx -> Cplx -> Cplx
+-- falpha z tau = 
+--  sqrt (-i_ * tau) * exp (i_ / tau * z * z / pi)
 
 jtheta1Alt :: Cplx -> Cplx -> Cplx
 jtheta1Alt z tau = 
   if imagPart tau < 1.3 
     then
-      let w = pi * tau in 
-      i_ * jtheta1Alt2 (z / w) (i_ / w) / falpha z tau
+      jtheta1Alt2 (z/pi) (-i_ * tau/pi)
+--      let w = pi * tau in 
+--      i_ * jtheta1Alt2 (z / w) (i_ / w) / falpha z tau
     else
-      i_ * jtheta1Alt1 (z / tau) (exp (-i_ * pi / tau)) / falpha z tau
+      jtheta1Alt1 z (exp (i_ * pi * tau))
+--      i_ * jtheta1Alt1 (z / tau) (exp (-i_ * pi / tau)) / falpha z tau
 
 tauFromQ :: Cplx -> Cplx
 tauFromQ q = -i_ * log q / pi
