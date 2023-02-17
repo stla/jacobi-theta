@@ -1,4 +1,4 @@
-name: Github-Action-Multiple-OS-Resolvers
+name: Stack
 
 on:
   pull_request:
@@ -28,8 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: freckle/stack-action@v3
-        with:
-          prefix: ${{ matrix.runner }}/${{ matrix.resolver }}/
 
       - id: stack
         uses: freckle/stack-action@v3
