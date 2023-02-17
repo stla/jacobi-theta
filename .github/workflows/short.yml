@@ -20,4 +20,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: coverage-report
-          path: ${{ steps.stack.outputs.local-hpc-root }}/index.html
+          path: ${{ steps.stack.outputs.local-hpc-root }}
