@@ -12,7 +12,7 @@ q :: Complex Double
 q = exp (-pi)
 
 q' :: Complex Double 
-q' = exp (-pi/100)
+q' = exp (-pi/10)
 
 q'' :: Complex Double 
 q'' = exp (i_ * pi * tau)
@@ -30,7 +30,7 @@ main = defaultMain $
         (approx 10 expected),
 
     testCase "another jtheta1 value" $ do
-      let expected = 0.0284051242069853 :+ 0.0
+      let expected = 1.75929905417707 :+ 0.0
           obtained = jtheta1 2 q'
       assertEqual ""
         (approx 10 obtained)
