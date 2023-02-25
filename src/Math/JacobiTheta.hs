@@ -70,7 +70,7 @@ falpha z tau =
 
 jtheta1Alt :: Cplx -> Cplx -> Cplx
 jtheta1Alt z tau = 
-  if imagPart tau < 1.3 
+  if imagPart tau > 1.3 
     then
       let w = pi * tau in 
       i_ * jtheta1Alt2 (z / w) (i_ / w) / falpha z tau

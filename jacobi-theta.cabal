@@ -1,5 +1,5 @@
 name:                jacobi-theta
-version:             0.1.0.0
+version:             0.1.1.0
 synopsis:            Jacobi Theta Functions
 description:         Evaluation of the Jacobi theta functions.
 homepage:            https://github.com/stla/jacobi-theta#readme
