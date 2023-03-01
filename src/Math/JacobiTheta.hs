@@ -96,39 +96,39 @@ expM z tau = exp (i_ * (z + tau * pi/4))
 
 -- | First Jacobi theta function
 jtheta1 :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
+     Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
 jtheta1 z q = jtheta1Alt z (getTauFromQ q)
 
 -- | Second Jacobi theta function
 jtheta2 :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
+     Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
 jtheta2 z = jtheta1 (z + pi/2)
 
 -- | Third Jacobi theta function
 jtheta3 :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
+     Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
 jtheta3 z q = jtheta2 (z - pi/2 * tau) q * expM (-z) tau
   where
     tau = tauFromQ q
 
 -- | Fourth Jacobi theta function
 jtheta4 :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
+     Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
 jtheta4 z = jtheta3 (z + pi/2)
 
 -- | Derivative of the first Jacobi theta function
 jtheta1Dash :: 
-     Cplx -- ^ z
-  -> Cplx -- ^ q, the nome
-  -> Cplx
+     Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
 jtheta1Dash z q = 
   go 0 (0.0 :+ 0.0) 1.0 (1.0 / qsq) 1.0
   where 
