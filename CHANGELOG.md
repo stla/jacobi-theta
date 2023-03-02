@@ -1,3 +1,8 @@
+## 0.1.2.0 - 2023-03-02
+
+Some values of the Jacobi theta functions were wrong.
+
+
 ## 0.1.1.1 - 2023-03-01
 
 Removed a useless type alias.
