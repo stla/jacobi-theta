@@ -1,7 +1,8 @@
 module Main where
-import           Approx
-import           Data.Complex
-import           Math.JacobiTheta
+import Approx ( approx )
+import Data.Complex ( Complex(..) )
+import Math.JacobiTheta
+    ( jtheta1, jtheta2, jtheta3, jtheta4, jtheta1Dash )
 import           Test.Tasty       (defaultMain, testGroup)
 import           Test.Tasty.HUnit (assertEqual, testCase)
 

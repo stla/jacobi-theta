@@ -7,7 +7,7 @@ module Math.JacobiTheta
     jtheta4
   )
   where
-import Data.Complex
+import Data.Complex ( imagPart, magnitude, realPart, Complex(..) )
 
 type Cplx = Complex Double
 

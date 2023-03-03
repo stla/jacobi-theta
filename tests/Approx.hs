@@ -1,5 +1,5 @@
 module Approx where
-import Data.Complex
+import Data.Complex ( imagPart, realPart, Complex(..) )
 
 approx0 :: Int -> Double -> Double
 approx0 n x = fromInteger (round $ x * (10^n)) / (10.0^^n)
