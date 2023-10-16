@@ -70,6 +70,26 @@ main = defaultMain $
           obtained = jtheta1Dash (1 :+ 1) q
       assertEqual ""
         (approx 10 obtained)
-        (approx 10 expected)
+        (approx 10 expected),
+
+    testCase "Jacobi identity" $ do
+      let q''' = 0.556 :+ 0.283
+          theta2 = jtheta2 0 q'''
+          theta3 = jtheta3 0 q'''
+          theta4 = jtheta4 0 q'''
+          expected = theta3**4
+          obtained = theta2**4 + theta4**4
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected),
+
+    testCase "Edge case" $ do
+      let tau = 0.7792256 :+ 1.0e-7
+          q'''' = exp(i_ * pi * tau)
+          obtained = jtheta2 0 q''''
+          expected = 27.746815969548447 :+ 31.241216782108797
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected)      
 
   ]

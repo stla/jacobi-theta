@@ -3,7 +3,7 @@ name: Stack
 on:
   pull_request:
   push:
-    branches: master
+    branches: main
 
 jobs:
   test:
@@ -15,7 +15,7 @@ jobs:
           - windows-latest
 
         resolver:
-          - nightly   # ghc-9.4 (as of writing)
+          - nightly   # ghc-9.6 (as of writing)
           - lts       # ghc-9.4 (as of writing)
           - lts-20.26 # ghc-9.2
           - lts-19.33 # ghc-9.0

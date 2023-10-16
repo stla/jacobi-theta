@@ -1,3 +1,8 @@
+## 0.2.0.0 - 2023-10-16
+
+New, better implementation of the Jacobi theta functions.
+
+
 ## 0.1.2.0 - 2023-03-02
 
 Some values of the Jacobi theta functions were wrong.

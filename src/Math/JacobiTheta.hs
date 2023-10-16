@@ -1,10 +1,10 @@
 module Math.JacobiTheta
   (
-    jtheta1Dash,
     jtheta1,
     jtheta2,
     jtheta3,
-    jtheta4
+    jtheta4,
+    jtheta1Dash 
   )
   where
 import Data.Complex ( imagPart, magnitude, realPart, Complex(..) )
@@ -24,62 +24,74 @@ areClose z1 z2 = magnitude (z1 - z2) < epsilon * h
     magn2 = magnitude z2
     h = if magn2 < epsilon then 1.0 else max (magnitude z1) magn2
 
-square :: Cplx -> Cplx
-square z = z * z
+modulo :: Double -> Int -> Double
+modulo a p = 
+  let p' = fromIntegral p
+  in
+  if a > 0 
+    then a - fromIntegral(p * floor(a/p'))  
+    else a - fromIntegral(p * ceiling(a/p'))
 
-jtheta1Alt1 :: Cplx -> Cplx -> Cplx
-jtheta1Alt1 z q =
-  go 0 (0.0 :+ 0.0) 1.0 (1.0 / qsq) 1.0
-  where 
-    qsq = q * q
-    go :: Int -> Cplx -> Cplx -> Cplx -> Cplx -> Cplx
-    go n out alt q_2n q_n_np1 
-      | n > 3000 = error "Reached 3000 iterations."
-      | areClose out outnew = 2.0 * sqrt (sqrt q) * out
-      | otherwise = go (n + 1) outnew (-alt) q_2np1 q_np1_np2
+dologtheta4 :: Cplx -> Cplx -> Int -> Int -> Cplx
+dologtheta4 z tau passes maxiter = 
+  dologtheta3 (z + 0.5) tau (passes+1) maxiter
+
+dologtheta3 :: Cplx -> Cplx -> Int -> Int -> Cplx
+dologtheta3 z tau passes maxiterloc
+  | realPart tau2 > 0.6  = dologtheta4 z (tau2 - 1) (passes + 1) maxiterloc
+  | realPart tau2 < -0.6 = dologtheta4 z (tau2 + 1) (passes + 1) maxiterloc
+  | magnitude tau2 < 0.98 && imagPart tau2 < 0.98 = 
+      i_ * pi * tauprime * z * z 
+      + dologtheta3 (z * tauprime) tauprime (passes + 1) maxiterloc
+      - log(sqrt tau2 / sqrt i_) 
+  | otherwise = argtheta3 z tau2 0 maxiterloc
+    where
+      rPtau = realPart tau
+      rPtau2 = if rPtau > 0
+        then modulo (rPtau + 1) 2 - 1
+        else modulo (rPtau - 1) 2 + 1
+      tau2 = rPtau2 :+ imagPart tau
+      tauprime = -1 / tau2
+
+argtheta3 :: Cplx -> Cplx -> Int -> Int -> Cplx
+argtheta3 z tau passes maxiterloc
+  | passes > maxiterloc = error "Reached maximal iteration."
+  | iPz < -iPtau / 2 = argtheta3 (-zuse) tau (passes + 1) maxiterloc
+  | iPz >= iPtau / 2 = 
+      -2 * pi * quotient * i_ * zmin 
+      + argtheta3 zmin tau (passes + 1) maxiterloc
+      - i_ * pi * tau * quotient * quotient
+  | otherwise = calctheta3 zuse tau
+    where
+      iPz = imagPart z
+      iPtau = imagPart tau
+      zuse = modulo (realPart z) 1 :+ iPz
+      quotient = fromInt $ floor(iPz / iPtau + 0.5)
+      zmin = zuse - tau * quotient
+      fromInt :: Int -> Cplx
+      fromInt = fromIntegral
+
+calctheta3 :: Cplx -> Cplx -> Cplx
+calctheta3 z tau = 
+    go 1 1
+    where
+      qw :: Int -> Cplx
+      qw n = exp(inpi * (taun + 2 * z)) + exp(inpi * (taun - 2 * z))
         where
-          q_2np1 = q_2n * qsq
-          q_np1_np2 = q_n_np1 * q_2np1
           n' = fromIntegral n 
-          k = 2.0 * n' + 1.0
-          outnew = out + alt * q_np1_np2 * sin (k * z) 
+          inpi = i_ * n' * pi 
+          taun = n' * tau     
+      go n res
+        | isNaN modulus = error "NaN has occured in the summation."
+        | isInfinite modulus = error "Infinity reached in the summation."
+--        | modulus == 0 = error "Zero has occured in the summation."
+        | n >= 3 && areClose res resnew = log res
+        | otherwise = go (n + 1) resnew
+          where
+            modulus = magnitude res
+            resnew = res + qw n
 
--- jtheta1(z, tau) = jtheta1Alt2 (z/pi) (-i_ * tau/pi)
-jtheta1Alt2 :: Cplx -> Cplx -> Cplx
-jtheta1Alt2 z' t' = 
-  let nm = round (0.5 - realPart z') in
-  let np = nm + 1 in
-  go nm np (0.0 :+ 0.0) (if even np then (-1, 1) else (1, -1)) 
-  where
-    go :: Int -> Int -> Cplx -> (Cplx, Cplx) -> Cplx
-    go nminus nplus series (altm, altp)
-      | nplus - nminus > 3000 = error "Reached 3000 iterations."
-      | (nplus - nminus > 2) && areClose series newseries = 
-          series / sqrt (pi * t')
-      | otherwise = go (nminus - 1) (nplus + 1) newseries (-altm, -altp)
-        where 
-          nminus' = fromIntegral nminus
-          nplus' = fromIntegral nplus
-          termm = altm * exp (- square (nminus' - 0.5 + z') / t')
-          termp = altp * exp (- square (nplus' - 0.5 + z') / t')
-          newseries = series + termm + termp
-
---falpha :: Cplx -> Cplx -> Cplx
---falpha z tau = 
---  sqrt (-i_ * tau) * exp (i_ / tau * z * z / pi)
-
-jtheta1Alt :: Cplx -> Cplx -> Cplx
-jtheta1Alt z tau = 
-  if imagPart tau > 1.3 
-    then
-      jtheta1Alt1 z (exp (i_ * pi * tau))
---      let w = pi * tau in 
---      i_ * jtheta1Alt2 (z / w) (i_ / w) / falpha z tau
-    else
-      let t = - i_ * tau / pi in
-      jtheta1Alt2 (z / pi) t
---      i_ * jtheta1Alt1 (z / tau) (exp (-i_ * pi / tau)) / falpha z tau
-
+-------------------------------------------------------------------------------
 tauFromQ :: Cplx -> Cplx
 tauFromQ q = -i_ * log q / pi
 
@@ -94,38 +106,51 @@ checkQ q
 getTauFromQ :: Cplx -> Cplx
 getTauFromQ = tauFromQ . checkQ
 
-expM :: Cplx -> Cplx -> Cplx
-expM z tau = exp (i_ * (z + tau * pi/4))
+funM :: Cplx -> Cplx -> Cplx
+funM z tau = i_ * pi * (z + tau/4)
+
+ljtheta1 :: Cplx -> Cplx -> Cplx
+ljtheta1 z tau = ljtheta2 (z - 0.5) tau
 
 -- | First Jacobi theta function
-jtheta1 :: 
+jtheta1 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
   -> Complex Double
-jtheta1 z q = jtheta1Alt z (getTauFromQ q)
+jtheta1 z q = exp(ljtheta1 (z/pi) tau)
+  where
+    tau = getTauFromQ q
+
+ljtheta2 :: Cplx -> Cplx -> Cplx
+ljtheta2 z tau = 
+  funM z tau + dologtheta3 (z + 0.5 * tau) tau 0 1000
 
 -- | Second Jacobi theta function
-jtheta2 :: 
+jtheta2 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
   -> Complex Double
-jtheta2 z = jtheta1 (z + pi/2)
+jtheta2 z q = exp(ljtheta2 (z/pi) tau)
+  where
+    tau = getTauFromQ q
 
 -- | Third Jacobi theta function
-jtheta3 :: 
+jtheta3 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
   -> Complex Double
-jtheta3 z q = jtheta2 (z - pi/2 * tau) q * expM (-z) tau
+jtheta3 z q = exp(dologtheta3 (z/pi) tau 0 1000)
   where
-    tau = tauFromQ q
+    tau = getTauFromQ q
 
 -- | Fourth Jacobi theta function
-jtheta4 :: 
+jtheta4 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
   -> Complex Double
-jtheta4 z = jtheta3 (z + pi/2)
+jtheta4 z q = exp(dologtheta4 (z/pi) tau 0 1000)
+  where
+    tau = getTauFromQ q
 
 -- | Derivative of the first Jacobi theta function
 jtheta1Dash :: 
