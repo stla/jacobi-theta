@@ -1,3 +1,15 @@
+{-|
+Module      : Math.JacobiTheta
+Description : Jacobi theta functions.
+Copyright   : (c) Stéphane Laurent, 2023
+License     : BSD3
+Maintainer  : laurent_step@outlook.fr
+
+Provides the four usual Jacobi theta functions, the Jacobi theta function 
+with characteristics, the derivative of the first Jacobi theta function, 
+as well as a function for the derivative at @0@ only of the first Jacobi 
+theta function.
+-}
 module Math.JacobiTheta
   (
     jtheta1,
@@ -114,7 +126,7 @@ funM z tau = i_ * pi * (z + tau/4)
 ljtheta1 :: Cplx -> Cplx -> Cplx
 ljtheta1 z tau = ljtheta2 (z - 0.5) tau
 
--- | First Jacobi theta function
+-- | First Jacobi theta function.
 jtheta1 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -127,7 +139,7 @@ ljtheta2 :: Cplx -> Cplx -> Cplx
 ljtheta2 z tau = 
   funM z tau + dologtheta3 (z + 0.5 * tau) tau 0 1000
 
--- | Second Jacobi theta function
+-- | Second Jacobi theta function.
 jtheta2 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -136,7 +148,7 @@ jtheta2 z q = exp(ljtheta2 (z/pi) tau)
   where
     tau = getTauFromQ q
 
--- | Third Jacobi theta function
+-- | Third Jacobi theta function.
 jtheta3 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -145,7 +157,7 @@ jtheta3 z q = exp(dologtheta3 (z/pi) tau 0 1000)
   where
     tau = getTauFromQ q
 
--- | Fourth Jacobi theta function
+-- | Fourth Jacobi theta function.
 jtheta4 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -202,7 +214,7 @@ jtheta1Dash0 q =
   where
     jab = jthetaAB (1/6) 0.5 0 (q*q*q)
 
--- | Derivative of the first Jacobi theta function
+-- | Derivative of the first Jacobi theta function.
 jtheta1Dash :: 
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
