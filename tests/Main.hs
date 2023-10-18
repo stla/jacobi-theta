@@ -2,7 +2,7 @@ module Main where
 import Approx ( approx )
 import Data.Complex ( Complex(..) )
 import Math.JacobiTheta
-    ( jtheta1, jtheta2, jtheta3, jtheta4, jtheta1Dash )
+    ( jtheta1, jtheta2, jtheta3, jtheta4, jtheta1Dash, jtheta1Dash0, jthetaAB )
 import           Test.Tasty       (defaultMain, testGroup)
 import           Test.Tasty.HUnit (assertEqual, testCase)
 
@@ -90,6 +90,22 @@ main = defaultMain $
           expected = 27.746815969548447 :+ 31.241216782108797
       assertEqual ""
         (approx 10 obtained)
-        (approx 10 expected)      
+        (approx 10 expected),
+
+    testCase "jtheta1Dash at 0" $ do
+      let q''' = 0.556 :+ 0.283
+          expected = jtheta1Dash0 q'''
+          obtained = jtheta1Dash 0 q'''
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected),
+
+    testCase "A formula involving some jthetaAB at z=0" $ do
+      let q''' = 0.556 :+ 0.283
+          expected = (jthetaAB (1/6) 0.5 0 q)**3
+          obtained = (jthetaAB (1/6) (1/6) 0 q)**3 + (jthetaAB (1/6) (5/6) 0 q)**3
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected)
 
   ]
