@@ -166,6 +166,19 @@ jtheta4 z q = exp(dologtheta4 (z/pi) tau 0 1000)
   where
     tau = getTauFromQ q
 
+jthetaAB' ::
+     Complex Double -- ^ characteristic a
+  -> Complex Double -- ^ characteristic b
+  -> Complex Double -- ^ z
+  -> Complex Double -- ^ tau
+  -> Complex Double
+jthetaAB' a b z tau = c * exp(dologtheta3 (alpha+beta) tau 0 1000)
+  where
+    alpha = a * tau 
+    beta  = z/pi + b
+    c     = exp(i_ * pi * a * (alpha + 2*beta)) 
+
+
 -- | Jacobi theta function with characteristics. This is a family of functions, 
 --  containing the first Jacobi theta function (@a=b=0.5@), the second Jacobi 
 --  theta function (@a=0.5, b=0@), the third Jacobi theta function (@a=b=0@)
@@ -214,7 +227,8 @@ jtheta1Dash0 ::
 jtheta1Dash0 q = 
   -2 * i_ * jab * jab * jab
   where
-    jab = jthetaAB (1/6) 0.5 0 (q*q*q)
+    tau = getTauFromQ q
+    jab = jthetaAB' (1/6) 0.5 0 (3*tau)
 
 -- | Derivative of the first Jacobi theta function.
 jtheta1Dash :: 
