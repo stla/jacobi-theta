@@ -1,3 +1,8 @@
+## 0.2.1.1 - 2023-10-18
+
+Fixed a mistake in `jtheta1Dash0`.
+
+
 ## 0.2.1.0 - 2023-10-18
 
 - Jacobi theta function with characteristics.

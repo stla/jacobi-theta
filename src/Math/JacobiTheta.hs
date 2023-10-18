@@ -215,9 +215,8 @@ jthetaAB a b z q = c * jtheta3 (alpha + beta) q
     tau = getTauFromQ q
     alpha = pi * a * tau 
     beta  = z + pi * b
-    -- c     = exp(i_ * a * (alpha + 2*beta)) 
-    -- c'    = exp(i_ * a * alpha) * exp(2 * i_ * a * beta)
-    c     = q**(a*a) * exp(2 * i_ * a * beta)
+    c     = exp(i_ * a * (alpha + 2*beta)) 
+    -- c     = q**(a*a) * exp(2 * i_ * a * beta)
 
 -- | Derivative at 0 of the first Jacobi theta function. This is much more 
 --  efficient than evaluating @jtheta1Dash@ at @0@.
