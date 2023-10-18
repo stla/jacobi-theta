@@ -1,3 +1,10 @@
+## 0.2.1.0 - 2023-10-18
+
+- Jacobi theta function with characteristics.
+
+- Derivative at 0 of the first Jacobi theta function.
+
+
 ## 0.2.0.0 - 2023-10-16
 
 New, better implementation of the Jacobi theta functions.

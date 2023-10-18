@@ -4,6 +4,8 @@ module Math.JacobiTheta
     jtheta2,
     jtheta3,
     jtheta4,
+    jthetaAB,
+    jtheta1Dash0,
     jtheta1Dash 
   )
   where
@@ -151,6 +153,54 @@ jtheta4 ::
 jtheta4 z q = exp(dologtheta4 (z/pi) tau 0 1000)
   where
     tau = getTauFromQ q
+
+-- | Jacobi theta function with characteristics. This is a family of functions, 
+--  containing the first Jacobi theta function (@a=b=0.5@), the second Jacobi 
+--  theta function (@a=0.5, b=0@), the third Jacobi theta function (@a=b=0@)
+--  and the fourth Jacobi theta function (@a=0, b=0.5@). The examples given 
+--  below show the periodicity-like properties of these functions:
+--  
+-- >>> import Data.Complex
+-- >>> a = 2 :+ 0.3
+-- >>> b = 1 :+ (-0.6)
+-- >>> z = 0.1 :+ 0.4
+-- >>> tau = 0.2 :+ 0.3
+-- >>> im = 0 :+ 1 
+-- >>> q = exp(im * pi * tau)
+-- >>> jab = jthetaAB a b z q
+-- >>> jthetaAB a b (z + pi) q
+-- (-5.285746223832433e-3) :+ 0.1674462628348814
+-- 
+-- >>> jab * exp(2 * im * pi * a)
+-- (-5.285746223831987e-3) :+ 0.16744626283488154
+-- 
+-- >>> jtheta_ab a b (z + pi*tau) q
+-- 0.10389127606987271 :+ 0.10155646232306936
+-- 
+-- >>> jab * exp(-im * (pi*tau + 2*z + 2*pi*b))
+-- 0.10389127606987278 :+ 0.10155646232306961
+jthetaAB ::
+     Complex Double -- ^ characteristic a
+  -> Complex Double -- ^ characteristic b
+  -> Complex Double -- ^ z
+  -> Complex Double -- ^ q, the nome
+  -> Complex Double
+jthetaAB a b z q = c * jtheta3 (alpha + beta) q
+  where
+    tau = getTauFromQ q
+    alpha = pi * a * tau
+    beta  = z + pi * b
+    c     =  exp(i_ * a * (alpha + 2*beta)) 
+
+-- | Derivative at 0 of the first Jacobi theta function. This is much more 
+--  efficient than evaluating @jtheta1Dash@ at @0@.
+jtheta1Dash0 :: 
+     Complex Double -- ^ q, the nome
+  -> Complex Double
+jtheta1Dash0 q = 
+  -2 * i_ * jab * jab * jab
+  where
+    jab = jthetaAB (1/6) 0.5 0 (q*q*q)
 
 -- | Derivative of the first Jacobi theta function
 jtheta1Dash :: 
