@@ -102,8 +102,9 @@ main = defaultMain $
 
     testCase "A formula involving some jthetaAB at z=0" $ do
       let q''' = 0.556 :+ 0.283
-          expected = (jthetaAB (1/6) 0.5 0 q)**3
-          obtained = (jthetaAB (1/6) (1/6) 0 q)**3 + (jthetaAB (1/6) (5/6) 0 q)**3
+          expected = (jthetaAB (1/6) 0.5 0 q''')**3
+          obtained = 
+            (jthetaAB (1/6) (1/6) 0 q''')**3 + (jthetaAB (1/6) (5/6) 0 q''')**3
       assertEqual ""
         (approx 10 obtained)
         (approx 10 expected)
