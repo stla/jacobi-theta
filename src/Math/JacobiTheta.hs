@@ -13,10 +13,15 @@ theta function.
 module Math.JacobiTheta
   (
     jtheta1,
+    jtheta1',
     jtheta2,
+    jtheta2',
     jtheta3,
+    jtheta3',
     jtheta4,
+    jtheta4',
     jthetaAB,
+    jthetaAB',
     jtheta1Dash0,
     jtheta1Dash 
   )
@@ -126,7 +131,7 @@ funM z tau = i_ * pi * (z + tau/4)
 ljtheta1 :: Cplx -> Cplx -> Cplx
 ljtheta1 z tau = ljtheta2 (z - 0.5) tau
 
--- | First Jacobi theta function.
+-- | First Jacobi theta function in function of the nome.
 jtheta1 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -135,11 +140,20 @@ jtheta1 z q = exp(ljtheta1 (z/pi) tau)
   where
     tau = getTauFromQ q
 
+-- | First Jacobi theta function in function of @tau@.
+jtheta1' ::
+     Complex Double -- ^ z
+  -> Complex Double -- ^ tau
+  -> Complex Double
+jtheta1' z tau
+  | imagPart tau <= 0 = error "`tau` must have a nonnegative imaginary part."
+  | otherwise = exp(ljtheta1 (z/pi) tau)
+
 ljtheta2 :: Cplx -> Cplx -> Cplx
 ljtheta2 z tau = 
   funM z tau + dologtheta3 (z + 0.5 * tau) tau 0 1000
 
--- | Second Jacobi theta function.
+-- | Second Jacobi theta function in function of the nome.
 jtheta2 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -148,7 +162,16 @@ jtheta2 z q = exp(ljtheta2 (z/pi) tau)
   where
     tau = getTauFromQ q
 
--- | Third Jacobi theta function.
+-- | Second Jacobi theta function in function of @tau@.
+jtheta2' ::
+     Complex Double -- ^ z
+  -> Complex Double -- ^ tau
+  -> Complex Double
+jtheta2' z tau
+  | imagPart tau <= 0 = error "`tau` must have a nonnegative imaginary part."
+  | otherwise = exp(ljtheta2 (z/pi) tau)
+
+-- | Third Jacobi theta function in function of the nome.
 jtheta3 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -157,7 +180,16 @@ jtheta3 z q = exp(dologtheta3 (z/pi) tau 0 1000)
   where
     tau = getTauFromQ q
 
--- | Fourth Jacobi theta function.
+-- | Third Jacobi theta function in function of @tau@.
+jtheta3' ::
+     Complex Double -- ^ z
+  -> Complex Double -- ^ tau
+  -> Complex Double
+jtheta3' z tau
+  | imagPart tau <= 0 = error "`tau` must have a nonnegative imaginary part."
+  | otherwise = exp(dologtheta3 (z/pi) tau 0 1000)
+
+-- | Fourth Jacobi theta function in function of the nome.
 jtheta4 ::
      Complex Double -- ^ z
   -> Complex Double -- ^ q, the nome
@@ -166,18 +198,14 @@ jtheta4 z q = exp(dologtheta4 (z/pi) tau 0 1000)
   where
     tau = getTauFromQ q
 
-jthetaAB' ::
-     Complex Double -- ^ characteristic a
-  -> Complex Double -- ^ characteristic b
-  -> Complex Double -- ^ z
+-- | Fourth Jacobi theta function in function of @tau@.
+jtheta4' ::
+     Complex Double -- ^ z
   -> Complex Double -- ^ tau
   -> Complex Double
-jthetaAB' a b z tau = c * exp(dologtheta3 (alpha+beta) tau 0 1000)
-  where
-    alpha = a * tau 
-    beta  = z/pi + b
-    c     = exp(i_ * pi * a * (alpha + 2*beta)) 
-
+jtheta4' z tau
+  | imagPart tau <= 0 = error "`tau` must have a nonnegative imaginary part."
+  | otherwise = exp(dologtheta4 (z/pi) tau 0 1000)
 
 -- | Jacobi theta function with characteristics. This is a family of functions, 
 --  containing the first Jacobi theta function (@a=b=0.5@), the second Jacobi 
@@ -217,6 +245,19 @@ jthetaAB a b z q = c * jtheta3 (alpha + beta) q
     beta  = z + pi * b
     c     = exp(i_ * a * (alpha + 2*beta)) 
     -- c     = q**(a*a) * exp(2 * i_ * a * beta)
+
+-- | Jacobi theta function with characteristics in function of @tau@.
+jthetaAB' ::
+     Complex Double -- ^ characteristic a
+  -> Complex Double -- ^ characteristic b
+  -> Complex Double -- ^ z
+  -> Complex Double -- ^ tau
+  -> Complex Double
+jthetaAB' a b z tau = c * exp(dologtheta3 (alpha+beta) tau 0 1000)
+  where
+    alpha = a * tau 
+    beta  = z/pi + b
+    c     = exp(i_ * pi * a * (alpha + 2*beta)) 
 
 -- | Derivative at 0 of the first Jacobi theta function. This is much more 
 --  efficient than evaluating @jtheta1Dash@ at @0@.

@@ -1,3 +1,8 @@
+## 0.2.2.0 - 2023-10-19
+
+Added the Jacobi theta functions parameterized by `tau` instead of the nome.
+
+
 ## 0.2.1.1 - 2023-10-18
 
 Fixed a mistake in `jtheta1Dash0`.
