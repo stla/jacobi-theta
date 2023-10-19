@@ -2,9 +2,20 @@ module Main where
 import Approx ( approx )
 import Data.Complex ( Complex(..) )
 import Math.JacobiTheta
-    ( jtheta1, jtheta2, jtheta3, jtheta4, jtheta1Dash, jtheta1Dash0, jthetaAB )
-import           Test.Tasty       (defaultMain, testGroup)
-import           Test.Tasty.HUnit (assertEqual, testCase)
+    ( jtheta1
+    , jtheta2
+    , jtheta3
+    , jtheta4
+    , jtheta1'
+    , jtheta2'
+    , jtheta3'
+    , jtheta4'
+    , jtheta1Dash
+    , jtheta1Dash0
+    , jthetaAB
+    , jthetaAB' )
+import Test.Tasty       (defaultMain, testGroup)
+import Test.Tasty.HUnit (assertEqual, testCase)
 
 i_ :: Complex Double
 i_ = 0.0 :+ 1.0
@@ -72,11 +83,22 @@ main = defaultMain $
         (approx 10 obtained)
         (approx 10 expected),
 
-    testCase "Jacobi identity" $ do
+    testCase "Jacobi identity with the nome" $ do
       let q''' = 0.556 :+ 0.283
           theta2 = jtheta2 0 q'''
           theta3 = jtheta3 0 q'''
           theta4 = jtheta4 0 q'''
+          expected = theta3**4
+          obtained = theta2**4 + theta4**4
+      assertEqual ""
+        (approx 10 obtained)
+        (approx 10 expected),
+
+    testCase "Jacobi identity with tau" $ do
+      let tau = 5.55 :+ 0.23
+          theta2 = jtheta2' 0 tau
+          theta3 = jtheta3' 0 tau
+          theta4 = jtheta4' 0 tau
           expected = theta3**4
           obtained = theta2**4 + theta4**4
       assertEqual ""
@@ -99,6 +121,15 @@ main = defaultMain $
       assertEqual ""
         (approx 10 obtained)
         (approx 10 expected),
+
+    testCase "jtheta1 is minus jthetaAB with a=b=0.5" $ do
+      let tau = 5.55 :+ 0.23
+          z = 0.2 :+ 0.3
+          mtheta1 = - jtheta1' z tau
+          thetaAB = jthetaAB' 0.5 0.5 z tau
+      assertEqual ""
+        (approx 10 mtheta1)
+        (approx 10 thetaAB),
 
     testCase "A formula involving some jthetaAB at z=0" $ do
       let q''' = 0.556 :+ 0.283

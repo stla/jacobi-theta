@@ -208,10 +208,10 @@ jtheta4' z tau
   | otherwise = exp(dologtheta4 (z/pi) tau 0 1000)
 
 -- | Jacobi theta function with characteristics. This is a family of functions, 
---  containing the first Jacobi theta function (@a=b=0.5@), the second Jacobi 
---  theta function (@a=0.5, b=0@), the third Jacobi theta function (@a=b=0@)
---  and the fourth Jacobi theta function (@a=0, b=0.5@). The examples given 
---  below show the periodicity-like properties of these functions:
+--  containing the opposite of the first Jacobi theta function (@a=b=0.5@), 
+--  the second Jacobi theta function (@a=0.5, b=0@), the third Jacobi theta 
+--  function (@a=b=0@) and the fourth Jacobi theta function (@a=0, b=0.5@). 
+--  The examples below show the periodicity-like properties of these functions:
 --  
 -- >>> import Data.Complex
 -- >>> a = 2 :+ 0.3
