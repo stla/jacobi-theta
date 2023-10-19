@@ -253,7 +253,9 @@ jthetaAB' ::
   -> Complex Double -- ^ z
   -> Complex Double -- ^ tau
   -> Complex Double
-jthetaAB' a b z tau = c * exp(dologtheta3 (alpha+beta) tau 0 1000)
+jthetaAB' a b z tau = if imagPart tau <= 0
+  then error "`tau` must have a nonnegative imaginary part."
+  else c * exp(dologtheta3 (alpha+beta) tau 0 1000)
   where
     alpha = a * tau 
     beta  = z/pi + b
