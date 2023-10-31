@@ -76,6 +76,13 @@ main = defaultMain $
         (approx 10 obtained)
         (approx 10 expected),
 
+    testCase "a jtheta3 value with a negative q" $ do
+      let expected = (-23.82995222123) :+ (-12.77832967427)
+          obtained = jtheta3 (1 :+ 1) (-0.730402691048646)
+      assertEqual "" 
+        (approx 10 obtained)
+        (approx 10 expected),
+
     testCase "a jtheta1Dash value" $ do
       let expected = 0.81117649363854416 :+ (-0.89452803853474627)
           obtained = jtheta1Dash (1 :+ 1) q

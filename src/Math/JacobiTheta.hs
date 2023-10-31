@@ -112,14 +112,16 @@ calctheta3 z tau =
 
 -------------------------------------------------------------------------------
 tauFromQ :: Cplx -> Cplx
-tauFromQ q = -i_ * log q / pi
+tauFromQ q = if imagPart q == 0 && realPart q < 0 
+  then 1 :+ (-log(-(realPart q)) / pi)
+  else -i_ * log q / pi
 
 checkQ :: Cplx -> Cplx
 checkQ q
   | magnitude q >= 1 = 
     error "The modulus of the nome must be smaller than one."
-  | imagPart q == 0 && realPart q <= 0 = 
-    error "If the nome is real, it must be positive."
+  | q == 0 = 
+    error "The nome cannot be zero."
   | otherwise = q
 
 getTauFromQ :: Cplx -> Cplx
