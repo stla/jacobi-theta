@@ -1,3 +1,8 @@
+## 0.2.2.2 - 2023-10-31
+
+Allows negative nome.
+
+
 ## 0.2.2.1 - 2023-10-19
 
 More unit tests.
